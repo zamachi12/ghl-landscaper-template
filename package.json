@@ -1,0 +1,15 @@
+{
+  "name": "ghl-landscaper-template",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reusable, minimal-editorial landscaper website template — one config file to reskin per client, GHL-ready (Custom Code embed + inbound webhook).",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 4599",
+    "build": "npm run build:static && npm run build:embed && npm run build:inline",
+    "build:static": "node build-static.mjs",
+    "build:embed": "node build-embed.mjs",
+    "build:inline": "node build-inline.mjs"
+  },
+  "license": "UNLICENSED"
+}

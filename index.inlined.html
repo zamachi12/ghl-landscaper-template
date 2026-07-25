@@ -1,0 +1,922 @@
+<!-- ============================================================
+     BUILT FILE — do not edit directly.
+     Edit assets/js/config.js etc, then re-run:  node build-inline.mjs
+     Paste this whole file into a GHL Custom Code / blank funnel step.
+     ============================================================ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{company_name}} — Lawn & Landscape</title>
+  <meta name="description" content="{{tagline}}" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+/* =============================================================================
+   LANDSCAPER TEMPLATE — minimal editorial (inspired by kononenkogroup.com)
+   Reskin per client: change the tokens in :root below.
+   ========================================================================== */
+
+:root {
+  /* Palette */
+  --forest:      #1B2A21;
+  --forest-800:  #24352A;
+  --moss:        #4E6B44;
+  --leaf:        #7BA05B;
+  --cream:       #F4F1EA;
+  --sand:        #E7E1D4;
+  --stone:       #6E6A5F;
+  --ink-on-dark: #EDE9DF;
+  --line:        rgba(27, 42, 33, 0.14);
+  --line-light:  rgba(237, 233, 223, 0.16);
+
+  /* Type */
+  --font-display: "Fraunces", "Times New Roman", Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+
+  /* Spacing */
+  --gutter: clamp(1.25rem, 5vw, 6rem);
+  --container: 1280px;
+  --section-y: clamp(6rem, 12vw, 12rem);
+
+  --radius: 3px;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--forest);
+  line-height: 1.6;
+  font-size: clamp(1rem, 1.1vw, 1.125rem);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+
+/* Full-bleed breakout — when this markup is embedded inside a host page's
+   own boxed/padded section (e.g. a GHL Custom Code element sitting in a
+   "boxed" row), these rules let the page still span the true viewport
+   width instead of being squeezed into that container. Harmless if there's
+   no such ancestor. Does not help if the host's wrapper also applies a
+   CSS transform/filter to itself — that changes the containing block for
+   position:fixed elements (the nav) to that ancestor instead of the
+   viewport; if the nav still looks boxed after this, check the host
+   section for an "entrance animation" or similar effect and disable it. */
+.nav, .hero, .section, .footer {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; padding: 0; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select { font: inherit; color: inherit; }
+
+.container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* ---------- Shared type ---------- */
+.eyebrow {
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--moss); font-weight: 500;
+}
+.eyebrow--light { color: rgba(237,233,223,0.75); }
+
+.section { padding-block: var(--section-y); }
+.section--dark { background: var(--forest); color: var(--ink-on-dark); }
+.section--dark .eyebrow { color: var(--leaf); }
+
+.section__head { margin-bottom: clamp(2.5rem, 5vw, 4.5rem); }
+.section__head--center { text-align: center; }
+.section__title {
+  font-family: var(--font-display); font-weight: 300;
+  font-size: clamp(2rem, 4.5vw, 4rem); line-height: 1.05; letter-spacing: -0.01em;
+  margin-top: 0.6rem;
+}
+
+.leaf-mark {
+  width: 12px; height: 12px; border-radius: 0 60% 0 60%;
+  background: var(--leaf); display: inline-block; transform: rotate(45deg);
+  flex: none;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.72rem; font-weight: 600;
+  padding: 1rem 1.75rem; border-radius: var(--radius);
+  transition: background .35s ease, color .35s ease, letter-spacing .35s ease, border-color .35s ease;
+}
+.btn--primary { background: var(--forest); color: var(--cream); }
+.btn--primary:hover { background: var(--leaf); letter-spacing: 0.2em; }
+.section--dark .btn--primary { background: var(--leaf); color: var(--forest); }
+.section--dark .btn--primary:hover { background: var(--cream); }
+.btn--ghost { border: 1px solid var(--forest); color: var(--forest); }
+.btn--ghost:hover { background: var(--forest); color: var(--cream); }
+.btn--ghost-light { border-color: rgba(237,233,223,0.5); color: var(--ink-on-dark); }
+.btn--ghost-light:hover { background: var(--ink-on-dark); color: var(--forest); border-color: var(--ink-on-dark); }
+.btn--block { width: 100%; }
+
+/* ---------- Nav ---------- */
+.nav {
+  position: fixed; inset: 0 0 auto 0; z-index: 50;
+  transition: background .4s ease, backdrop-filter .4s ease, box-shadow .4s ease;
+}
+.nav__inner {
+  max-width: var(--container); margin-inline: auto; padding: 1.25rem var(--gutter);
+  display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+}
+.nav__brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; letter-spacing: 0.02em; color: var(--cream); }
+.nav__links { display: flex; gap: 2rem; }
+.nav__links a {
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.16em; font-weight: 500;
+  color: var(--cream); position: relative; padding-block: 0.25rem;
+}
+.nav__links a::after {
+  content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 0;
+  background: currentColor; transition: width .3s ease;
+}
+.nav__links a:hover::after { width: 100%; }
+.nav__cta { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; color: var(--cream); }
+
+/* scrolled state (added by JS) */
+.nav.is-scrolled { background: rgba(244,241,234,0.9); backdrop-filter: blur(12px); box-shadow: 0 1px 0 var(--line); }
+.nav.is-scrolled .nav__brand,
+.nav.is-scrolled .nav__links a,
+.nav.is-scrolled .nav__cta { color: var(--forest); }
+
+.nav__toggle { display: none; width: 44px; height: 44px; flex-direction: column; align-items: center; justify-content: center; gap: 6px; margin: -6px; }
+.nav__toggle span { height: 1.5px; width: 24px; background: var(--cream); transition: transform .3s ease, opacity .3s ease; }
+.nav.is-scrolled .nav__toggle span { background: var(--forest); }
+
+/* Mobile menu overlay */
+.menu {
+  position: fixed; inset: 0; z-index: 45; background: var(--forest); color: var(--cream);
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2.5rem;
+}
+.menu[hidden] { display: none; }
+.menu__links { display: flex; flex-direction: column; gap: 1.25rem; text-align: center; }
+.menu__links a { font-family: var(--font-display); font-size: 2rem; font-weight: 300; }
+.menu__phone { font-size: 0.9rem; letter-spacing: 0.05em; color: var(--leaf); }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; color: var(--cream); overflow: hidden; }
+.hero__bg { position: absolute; inset: 0; z-index: -1; }
+.hero__bg img { width: 100%; height: 120%; object-fit: cover; }
+.hero__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(27,42,33,0.45) 0%, rgba(27,42,33,0.25) 40%, rgba(27,42,33,0.8) 100%); }
+.hero__content { padding-bottom: clamp(4rem, 9vw, 8rem); padding-top: 40vh; }
+.hero__title {
+  font-family: var(--font-display); font-weight: 300;
+  font-size: clamp(2.75rem, 7vw, 7rem); line-height: 0.98; letter-spacing: -0.02em;
+  white-space: pre-line; margin: 1.25rem 0;
+  max-width: 14ch;
+}
+.hero__sub { max-width: 46ch; color: rgba(237,233,223,0.9); font-size: clamp(1rem, 1.4vw, 1.25rem); }
+.hero__actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+.hero__cue {
+  position: absolute; right: var(--gutter); bottom: clamp(2rem, 5vw, 3rem);
+  display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(237,233,223,0.8);
+}
+.hero__cue-line { width: 1px; height: 48px; background: rgba(237,233,223,0.5); }
+
+/* ---------- Services (editorial list) ---------- */
+.services { border-top: 1px solid var(--line); }
+.service {
+  border-bottom: 1px solid var(--line);
+  display: grid; grid-template-columns: 3rem 1fr auto; align-items: center; gap: 1.5rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0; position: relative;
+  transition: padding-left .4s ease;
+}
+.service__num { font-size: 0.75rem; color: var(--stone); letter-spacing: 0.1em; }
+.service__title { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.5rem, 3vw, 2.5rem); line-height: 1.1; }
+.service__desc { color: var(--stone); max-width: 52ch; margin-top: 0.5rem; font-size: 1rem; }
+.service__arrow { font-size: 1.5rem; color: var(--moss); transition: transform .4s ease; }
+.service__thumb {
+  position: absolute; right: 4rem; top: 50%; width: 220px; height: 150px; object-fit: cover;
+  transform: translateY(-50%) scale(0.9); opacity: 0; pointer-events: none;
+  border-radius: var(--radius); transition: opacity .4s ease, transform .4s ease; z-index: 2;
+}
+@media (hover: hover) and (min-width: 900px) {
+  .service:hover { padding-left: 1.5rem; }
+  .service:hover .service__arrow { transform: translateX(8px); }
+  .service:hover .service__thumb { opacity: 1; transform: translateY(-50%) scale(1); }
+}
+
+/* ---------- About ---------- */
+.about { display: grid; grid-template-columns: 1.1fr 1fr; grid-template-areas: "lead media" "body media"; gap: clamp(2rem, 5vw, 5rem) clamp(2rem, 6vw, 6rem); align-items: start; }
+.about__lead { grid-area: lead; }
+.about__statement { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.75rem, 3.5vw, 3rem); line-height: 1.12; letter-spacing: -0.01em; margin-top: 0.75rem; }
+.about__body { grid-area: body; color: rgba(237,233,223,0.82); max-width: 46ch; }
+.about__media { grid-area: media; }
+.about__media img { width: 100%; height: 100%; min-height: 340px; object-fit: cover; border-radius: var(--radius); }
+.about__stats { display: flex; flex-wrap: wrap; gap: 2.5rem; margin-top: 2.5rem; }
+.about__stat .value { font-family: var(--font-display); font-size: 1.5rem; color: var(--leaf); }
+.about__stat .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(237,233,223,0.6); margin-top: 0.25rem; }
+
+/* ---------- Projects ---------- */
+.projects { display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(1.5rem, 3vw, 3rem) clamp(1.5rem, 3vw, 2.5rem); }
+.project { overflow: hidden; }
+.project:nth-child(4n+1) { grid-column: span 7; }
+.project:nth-child(4n+2) { grid-column: span 5; margin-top: clamp(2rem, 6vw, 6rem); }
+.project:nth-child(4n+3) { grid-column: span 5; }
+.project:nth-child(4n+4) { grid-column: span 7; margin-top: clamp(2rem, 6vw, 6rem); }
+.project__frame { overflow: hidden; border-radius: var(--radius); }
+.project__frame img { width: 100%; aspect-ratio: 4/3; object-fit: cover; transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+@media (hover: hover) { .project:hover .project__frame img { transform: scale(1.05); } }
+.project__caption { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1rem; align-items: baseline; }
+.project__name { font-family: var(--font-display); font-size: 1.25rem; font-weight: 400; }
+.project__type { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--stone); }
+.project__loc { font-size: 0.8rem; color: var(--stone); }
+
+/* ---------- Testimonials ---------- */
+.quotes { max-width: 60rem; margin-inline: auto; display: flex; flex-direction: column; gap: clamp(3rem, 7vw, 6rem); }
+.quote { text-align: center; }
+.quote__text { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.5rem, 3.2vw, 2.75rem); line-height: 1.25; letter-spacing: -0.01em; }
+.quote__attr { margin-top: 1.5rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--leaf); }
+.quote__meta { color: rgba(237,233,223,0.6); }
+
+/* ---------- Contact ---------- */
+.contact { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2.5rem, 6vw, 6rem); align-items: start; }
+.contact__sub { color: var(--stone); margin-top: 1rem; max-width: 40ch; }
+.contact__details { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.contact__details li { display: grid; grid-template-columns: 5rem 1fr; gap: 1rem; align-items: baseline; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
+.contact__details .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--stone); }
+
+/* Form — minimal underlined inputs */
+.lead-form { display: flex; flex-direction: column; gap: 1.75rem; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; }
+.field { display: flex; flex-direction: column; gap: 0.5rem; }
+.field label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--stone); }
+.field input, .field textarea, .field select {
+  border: none; border-bottom: 1px solid var(--line); background: transparent;
+  padding: 0.75rem 0; border-radius: 0; transition: border-color .3s ease;
+  min-height: 44px;
+}
+.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--leaf); }
+.field textarea { resize: vertical; }
+.lead-form__status { font-size: 0.85rem; color: var(--moss); min-height: 1.2em; }
+.lead-form__status.is-error { color: #b4462f; }
+
+/* ---------- Footer ---------- */
+.footer { background: var(--forest-800); color: var(--ink-on-dark); padding-block: clamp(3rem, 6vw, 5rem) 2rem; }
+.footer__inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--line-light); }
+.footer__brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-size: 1.25rem; }
+.footer__links { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+.footer__links a { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(237,233,223,0.75); }
+.footer__links a:hover { color: var(--leaf); }
+.footer__meta { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.85rem; color: rgba(237,233,223,0.7); text-align: right; }
+.footer__note { color: var(--leaf); }
+.footer__base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; font-size: 0.75rem; color: rgba(237,233,223,0.55); }
+.footer__base a { color: rgba(237,233,223,0.7); margin-left: 1.25rem; }
+.footer__base a:hover { color: var(--leaf); }
+
+/* ---------- Reveal (base state for GSAP; visible if JS/motion off) ---------- */
+[data-reveal], [data-reveal-item] { will-change: transform, opacity; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .nav__links, .nav__cta { display: none; }
+  .nav__toggle { display: flex; }
+  .about { grid-template-columns: 1fr; grid-template-areas: "lead" "media" "body"; }
+  .about__media img { min-height: 260px; }
+  .contact { grid-template-columns: 1fr; }
+  .projects { display: flex; flex-direction: column; }
+  .project, .project:nth-child(n) { grid-column: auto; margin-top: 0; }
+  .service { grid-template-columns: 2rem 1fr auto; }
+  .service__thumb { display: none; }
+}
+@media (max-width: 560px) {
+  .field-row { grid-template-columns: 1fr; }
+  .hero__cue { display: none; }
+  .footer__meta { text-align: left; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- ============================ NAV ============================ -->
+  <header class="nav" data-nav data-animate>
+    <div class="nav__inner">
+      <a href="#top" class="nav__brand" data-brand>
+        <span class="leaf-mark" aria-hidden="true"></span>
+        <span>{{company_short}}</span>
+      </a>
+
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <a href="tel:{{phone_raw}}" class="nav__cta">{{phone_display}}</a>
+
+      <button class="nav__toggle" data-menu-toggle aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile full-screen menu -->
+  <div class="menu" data-menu hidden>
+    <nav class="menu__links" aria-label="Mobile">
+      <a href="#services" data-menu-link>Services</a>
+      <a href="#about" data-menu-link>About</a>
+      <a href="#projects" data-menu-link>Projects</a>
+      <a href="#testimonials" data-menu-link>Testimonials</a>
+      <a href="#contact" data-menu-link>Contact</a>
+    </nav>
+    <a href="tel:{{phone_raw}}" class="menu__phone">{{phone_display}}</a>
+  </div>
+
+  <main id="top">
+
+    <!-- ============================ HERO ============================ -->
+    <section class="hero">
+      <div class="hero__bg" data-hero-bg>
+        <img alt="" data-parallax data-img="hero_image" />
+        <div class="hero__scrim"></div>
+      </div>
+      <div class="container hero__content">
+        <p class="eyebrow eyebrow--light">{{hero_eyebrow}}</p>
+        <h1 class="hero__title" data-hero-title>{{hero_headline}}</h1>
+        <p class="hero__sub">{{hero_sub}}</p>
+        <div class="hero__actions">
+          <a href="#contact" class="btn btn--primary">{{hero_cta}}</a>
+          <a href="#services" class="btn btn--ghost btn--ghost-light">View services</a>
+        </div>
+      </div>
+      <a href="#services" class="hero__cue" aria-label="Scroll to services">
+        <span>Scroll</span><span class="hero__cue-line"></span>
+      </a>
+    </section>
+
+    <!-- ============================ SERVICES (01) ============================ -->
+    <section class="section" id="services">
+      <div class="container">
+        <header class="section__head">
+          <p class="eyebrow" data-reveal>01 — Services</p>
+          <h2 class="section__title" data-reveal>What we do</h2>
+        </header>
+        <ul class="services" data-services>
+          <!-- rendered from SITE.services -->
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================ ABOUT (02) ============================ -->
+    <section class="section section--dark" id="about">
+      <div class="container about">
+        <div class="about__lead">
+          <p class="eyebrow" data-reveal>02 — About</p>
+          <h2 class="about__statement" data-reveal>{{about_statement}}</h2>
+        </div>
+        <div class="about__body">
+          <p data-reveal>{{about_body}}</p>
+          <div class="about__stats" data-stats><!-- rendered from SITE.about_stats --></div>
+        </div>
+        <div class="about__media" data-reveal>
+          <img alt="{{company_name}} crew at work" data-parallax data-img="about_image" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ PROJECTS (03) ============================ -->
+    <section class="section" id="projects">
+      <div class="container">
+        <header class="section__head">
+          <p class="eyebrow" data-reveal>03 — Projects</p>
+          <h2 class="section__title" data-reveal>Recent work</h2>
+        </header>
+        <div class="projects" data-projects><!-- rendered from SITE.projects --></div>
+      </div>
+    </section>
+
+    <!-- ============================ TESTIMONIALS (04) ============================ -->
+    <section class="section section--dark" id="testimonials">
+      <div class="container">
+        <header class="section__head section__head--center">
+          <p class="eyebrow" data-reveal>04 — Testimonials</p>
+        </header>
+        <div class="quotes" data-quotes><!-- rendered from SITE.testimonials --></div>
+      </div>
+    </section>
+
+    <!-- ============================ CONTACT (05) ============================ -->
+    <section class="section" id="contact">
+      <div class="container contact">
+        <div class="contact__lead">
+          <p class="eyebrow" data-reveal>05 — Contact</p>
+          <h2 class="section__title" data-reveal>{{contact_headline}}</h2>
+          <p class="contact__sub" data-reveal>{{contact_sub}}</p>
+
+          <ul class="contact__details" data-reveal>
+            <li><span class="label">Call</span><a href="tel:{{phone_raw}}">{{phone_display}}</a></li>
+            <li><span class="label">Email</span><a href="mailto:{{email}}">{{email}}</a></li>
+            <li><span class="label">Visit</span><span>{{address_line}}<br>{{address_city}}</span></li>
+            <li><span class="label">Serving</span><span>{{areas_served}}</span></li>
+            <li><span class="label">Hours</span><span>{{hours}}</span></li>
+          </ul>
+        </div>
+
+        <!-- GHL LEAD FORM.  Fields map to GHL contact fields (see GHL-INTEGRATION.md).
+             Replace this whole <form> with a GHL form iframe if you prefer. -->
+        <form class="lead-form" data-lead-form novalidate>
+          <div class="field">
+            <label for="lf-name">Name</label>
+            <input id="lf-name" name="full_name" type="text" autocomplete="name" required />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="lf-phone">Phone</label>
+              <input id="lf-phone" name="phone" type="tel" autocomplete="tel" required />
+            </div>
+            <div class="field">
+              <label for="lf-email">Email</label>
+              <input id="lf-email" name="email" type="email" autocomplete="email" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="lf-service">Service needed</label>
+            <select id="lf-service" name="service" data-service-select></select>
+          </div>
+          <div class="field">
+            <label for="lf-message">Project details</label>
+            <textarea id="lf-message" name="message" rows="4"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block" data-submit>{{hero_cta}}</button>
+          <p class="lead-form__status" data-form-status role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="leaf-mark" aria-hidden="true"></span>
+        <span>{{company_name}}</span>
+      </div>
+      <nav class="footer__links" aria-label="Footer">
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="footer__meta">
+        <a href="tel:{{phone_raw}}">{{phone_display}}</a>
+        <span>{{address_line}}, {{address_city}}</span>
+        <span class="footer__note">{{founded_note}}</span>
+      </div>
+    </div>
+    <div class="container footer__base">
+      <span>© <span data-year></span> {{company_name}}</span>
+      <span data-socials></span>
+    </div>
+  </footer>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Site data + logic -->
+  <script>
+/* =============================================================================
+   SITE CONFIG  —  THE ONLY FILE YOU EDIT TO PITCH A NEW CLIENT
+   -----------------------------------------------------------------------------
+   Every value below fills a {{token}} in index.html. To reskin the template
+   for a different landscaper, change the values here (and swap the images).
+
+   GHL NOTE: each key lists the matching GoHighLevel Custom Value name in a
+   comment. In GHL you can either:
+     (A) keep this JS file and just edit values per client, OR
+     (B) delete this file and let GHL replace {{custom_values.x}} tokens
+         server-side (see GHL-INTEGRATION.md). The token names match 1:1.
+   ========================================================================== */
+
+window.SITE = {
+  // --- Brand / identity -----------------------------------------------------
+  company_name: "Berman Lawn & Landscape",       // GHL: {{custom_values.company_name}}  (or {{location.name}})
+  company_short: "Berman",                        // GHL: {{custom_values.company_short}}
+  tagline: "Family-owned lawn & landscape in the Texas Hill Country.", // {{custom_values.tagline}}
+  founded_note: "Family owned & operated",        // {{custom_values.founded_note}}
+
+  // --- Contact --------------------------------------------------------------
+  phone_display: "(830) 992-1057",                // {{custom_values.phone_display}} (or {{location.phone}})
+  phone_raw: "8309921057",                        // used for tel: links
+  email: "hello@bermanlawn.com",                  // {{custom_values.email}}  (PLACEHOLDER — confirm real email)
+  address_line: "706 S Creek St",                 // {{custom_values.address_line}} (or {{location.address}})
+  address_city: "Fredericksburg, TX 78624",       // {{custom_values.address_city}}
+  areas_served: "Fredericksburg & nearby Hill Country",  // {{custom_values.areas_served}}
+  hours: "Mon–Sat · 7:00 AM – 9:00 PM",           // {{custom_values.hours}}
+
+  // --- Social (optional; leave "" to hide) ----------------------------------
+  facebook_url: "https://www.facebook.com/bermanlawnandlandscape/",
+  instagram_url: "https://www.instagram.com/bermanlawnandlandscape/",
+
+  // --- Hero -----------------------------------------------------------------
+  hero_eyebrow: "Landscaping · Fredericksburg, TX",
+  hero_headline: "Grounds worth\ncoming home to.",   // \n = line break in the big headline
+  hero_sub: "Design, installation, and dependable maintenance for residential and commercial properties across the Hill Country.",
+  hero_cta: "Get a free estimate",
+  hero_image: "https://images.unsplash.com/photo-1558904541-efa843a96f01?q=80&w=2000&auto=format&fit=crop", // PLACEHOLDER
+
+  // --- Services (01) --------------------------------------------------------
+  // Add / remove freely — the list renders itself.
+  services: [
+    {
+      title: "Lawn Care & Maintenance",
+      desc: "Mowing, edging, trimming, seasonal cleanups, and fertilization on a schedule you can count on.",
+      image: "https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?q=80&w=1400&auto=format&fit=crop"
+    },
+    {
+      title: "Landscape Design & Installation",
+      desc: "Beds, sod, native plantings, mulch, decomposed granite, and hardscape built to last.",
+      image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=1400&auto=format&fit=crop"
+    },
+    {
+      title: "Artificial Turf",
+      desc: "Clean, water-wise turf installation, infill, and refresh for lawns, play areas, and pet runs.",
+      image: "https://images.unsplash.com/photo-1600240644455-3edc55c375fe?q=80&w=1400&auto=format&fit=crop"
+    },
+    {
+      title: "Junk Removal & Hauling",
+      desc: "Lot clearing, debris removal, and hauling with our own skid steer and dump trailer.",
+      image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=1400&auto=format&fit=crop"
+    }
+  ],
+
+  // --- About (02) -----------------------------------------------------------
+  about_statement: "We treat every property like it's our own — because keeping it in the family is the whole point.",
+  about_body: "Berman Lawn & Landscape is a family-owned and operated crew serving Fredericksburg and the surrounding Hill Country. From weekly maintenance to full landscape installs, we show up on time, do honest work, and leave your grounds better than we found them — for homes and businesses alike.",
+  about_stats: [
+    { value: "Family", label: "Owned & operated" },
+    { value: "Res + Com", label: "Residential & commercial" },
+    { value: "Hill Country", label: "Fredericksburg & nearby" }
+  ],
+  about_image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=1400&auto=format&fit=crop", // PLACEHOLDER
+
+  // --- Projects (03) --------------------------------------------------------
+  projects: [
+    { name: "Hill Country Front Yard", type: "Design & Install", location: "Fredericksburg, TX", image: "https://images.unsplash.com/photo-1601158935942-52255782d322?q=80&w=1400&auto=format&fit=crop" },
+    { name: "Backyard Turf & Beds", type: "Artificial Turf", location: "Fredericksburg, TX", image: "https://images.unsplash.com/photo-1600240644455-3edc55c375fe?q=80&w=1400&auto=format&fit=crop" },
+    { name: "Commercial Grounds", type: "Maintenance", location: "Gillespie County, TX", image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=1400&auto=format&fit=crop" },
+    { name: "Lot Clearing & Haul-off", type: "Junk Removal", location: "Fredericksburg, TX", image: "https://images.unsplash.com/photo-1590674899484-d5640e854abe?q=80&w=1400&auto=format&fit=crop" }
+  ],
+
+  // --- Testimonials (04) — PLACEHOLDER copy; replace with real reviews -------
+  testimonials: [
+    { quote: "Honest, on time, and stayed until the work was done right. The crew was polite and the yard has never looked better.", author: "Homeowner", meta: "Fredericksburg, TX" },
+    { quote: "They handled our beds, sod, and haul-off in one go. Easy to work with and fair on price — we'll hire them again.", author: "Property Manager", meta: "Hill Country, TX" }
+  ],
+
+  // --- Contact (05) ---------------------------------------------------------
+  contact_headline: "Let's talk about your grounds.",
+  contact_sub: "Tell us what you need and we'll get back to you with a free estimate.",
+
+  // FORM DESTINATION — see GHL-INTEGRATION.md.
+  // Paste your GHL Inbound Webhook URL here to send leads straight into GHL.
+  // Leave "" to run in demo mode (logs to console, no network call).
+  ghl_webhook_url: "https://services.leadconnectorhq.com/hooks/jRLNTl0tyE6QmS3jOOZo/webhook-trigger/97088e91-9739-415d-aaf5-8e6b91f48e7d"
+};
+
+</script>
+  <script>
+/* =============================================================================
+   main.js — templating, dynamic rendering, GSAP motion, GHL form submit
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var SITE = window.SITE || {};
+
+  /* ---------------------------------------------------------------------------
+     1) TEMPLATING — replace {{token}} in the DOM with values from SITE.
+        (In GHL you can instead let {{custom_values.x}} be filled server-side
+         and skip this step. Token names match 1:1 — see GHL-INTEGRATION.md.)
+  --------------------------------------------------------------------------- */
+  function fillTokens(root) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var nodes = [], n;
+    while ((n = walker.nextNode())) { if (n.nodeValue.indexOf("{{") !== -1) nodes.push(n); }
+    nodes.forEach(function (node) {
+      node.nodeValue = node.nodeValue.replace(/\{\{\s*([\w.]+)\s*\}\}/g, function (m, key) {
+        return (SITE[key] != null) ? String(SITE[key]) : m;
+      });
+    });
+    // Attributes (href="tel:{{phone_raw}}", src="{{hero_image}}", etc.)
+    var all = root.querySelectorAll("*");
+    all.forEach(function (el) {
+      ["href", "src", "content", "alt"].forEach(function (attr) {
+        var v = el.getAttribute && el.getAttribute(attr);
+        if (v && v.indexOf("{{") !== -1) {
+          el.setAttribute(attr, v.replace(/\{\{\s*([\w.]+)\s*\}\}/g, function (m, key) {
+            return (SITE[key] != null) ? String(SITE[key]) : m;
+          }));
+        }
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------------------------
+     2) RENDER LISTS from SITE arrays
+  --------------------------------------------------------------------------- */
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function renderServices() {
+    var el = document.querySelector("[data-services]");
+    if (!el || !SITE.services) return;
+    el.innerHTML = SITE.services.map(function (s, i) {
+      var num = String(i + 1).padStart(2, "0");
+      var thumb = s.image ? '<img class="service__thumb" src="' + esc(s.image) + '" alt="" loading="lazy">' : "";
+      return '<li class="service" data-reveal-item>' +
+        '<span class="service__num">' + num + '</span>' +
+        '<div><h3 class="service__title">' + esc(s.title) + '</h3>' +
+        '<p class="service__desc">' + esc(s.desc) + '</p></div>' +
+        '<span class="service__arrow" aria-hidden="true">&rarr;</span>' +
+        thumb + '</li>';
+    }).join("");
+  }
+
+  function renderStats() {
+    var el = document.querySelector("[data-stats]");
+    if (!el || !SITE.about_stats) return;
+    el.innerHTML = SITE.about_stats.map(function (s) {
+      return '<div class="about__stat"><div class="value">' + esc(s.value) +
+        '</div><div class="label">' + esc(s.label) + '</div></div>';
+    }).join("");
+  }
+
+  function renderProjects() {
+    var el = document.querySelector("[data-projects]");
+    if (!el || !SITE.projects) return;
+    el.innerHTML = SITE.projects.map(function (p) {
+      return '<article class="project" data-reveal-item>' +
+        '<div class="project__frame"><img src="' + esc(p.image) + '" alt="' + esc(p.name) + '" loading="lazy"></div>' +
+        '<div class="project__caption"><div>' +
+        '<div class="project__name">' + esc(p.name) + '</div>' +
+        '<div class="project__loc">' + esc(p.location) + '</div></div>' +
+        '<div class="project__type">' + esc(p.type) + '</div></div></article>';
+    }).join("");
+  }
+
+  function renderQuotes() {
+    var el = document.querySelector("[data-quotes]");
+    if (!el || !SITE.testimonials) return;
+    el.innerHTML = SITE.testimonials.map(function (t) {
+      return '<blockquote class="quote" data-reveal-item>' +
+        '<p class="quote__text">&ldquo;' + esc(t.quote) + '&rdquo;</p>' +
+        '<div class="quote__attr">' + esc(t.author) +
+        (t.meta ? ' <span class="quote__meta">· ' + esc(t.meta) + '</span>' : "") +
+        '</div></blockquote>';
+    }).join("");
+  }
+
+  function renderServiceSelect() {
+    var el = document.querySelector("[data-service-select]");
+    if (!el) return;
+    var opts = ['<option value="">Select a service…</option>'];
+    (SITE.services || []).forEach(function (s) { opts.push('<option value="' + esc(s.title) + '">' + esc(s.title) + '</option>'); });
+    opts.push('<option value="Other">Something else</option>');
+    el.innerHTML = opts.join("");
+  }
+
+  function renderMisc() {
+    var y = document.querySelector("[data-year]");
+    if (y) y.textContent = new Date().getFullYear();
+    var soc = document.querySelector("[data-socials]");
+    if (soc) {
+      var links = [];
+      if (SITE.facebook_url) links.push('<a href="' + esc(SITE.facebook_url) + '" target="_blank" rel="noopener">Facebook</a>');
+      if (SITE.instagram_url) links.push('<a href="' + esc(SITE.instagram_url) + '" target="_blank" rel="noopener">Instagram</a>');
+      soc.innerHTML = links.join("");
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+     3) NAV — scrolled state + mobile menu
+  --------------------------------------------------------------------------- */
+  function initNav() {
+    var nav = document.querySelector("[data-nav]");
+    var toggle = document.querySelector("[data-menu-toggle]");
+    var menu = document.querySelector("[data-menu]");
+
+    function onScroll() { if (nav) nav.classList.toggle("is-scrolled", window.scrollY > window.innerHeight * 0.7); }
+    window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+    function closeMenu() { if (!menu) return; menu.hidden = true; toggle.setAttribute("aria-expanded", "false"); document.body.style.overflow = ""; }
+    if (toggle && menu) {
+      toggle.addEventListener("click", function () {
+        var open = menu.hidden;
+        menu.hidden = !open; toggle.setAttribute("aria-expanded", String(open));
+        document.body.style.overflow = open ? "hidden" : "";
+      });
+      menu.querySelectorAll("[data-menu-link]").forEach(function (a) { a.addEventListener("click", closeMenu); });
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+     4) GHL LEAD FORM submit
+  --------------------------------------------------------------------------- */
+  function initForm() {
+    var form = document.querySelector("[data-lead-form]");
+    if (!form) return;
+    var status = form.querySelector("[data-form-status]");
+    var submit = form.querySelector("[data-submit]");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      status.classList.remove("is-error");
+
+      var data = {};
+      new FormData(form).forEach(function (v, k) { data[k] = v; });
+      data.source = "Website — " + (SITE.company_name || "");
+      data.page_url = window.location.href;
+
+      if (!data.full_name || !data.phone) {
+        status.textContent = "Please add your name and phone.";
+        status.classList.add("is-error");
+        return;
+      }
+
+      var url = SITE.ghl_webhook_url;
+      if (!url) {
+        // Demo mode — no webhook configured yet.
+        console.log("[Lead captured — demo mode] Paste a GHL webhook URL into config.js:", data);
+        status.textContent = "Thanks! (Demo mode — connect your GHL webhook to receive this lead.)";
+        form.reset();
+        return;
+      }
+
+      submit.disabled = true;
+      status.textContent = "Sending…";
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      }).then(function (r) {
+        if (!r.ok) throw new Error("Request failed");
+        status.textContent = "Thanks! We'll be in touch shortly.";
+        form.reset();
+      }).catch(function () {
+        status.textContent = "Something went wrong — please call " + (SITE.phone_display || "us") + ".";
+        status.classList.add("is-error");
+      }).finally(function () { submit.disabled = false; });
+    });
+  }
+
+  /* ---------------------------------------------------------------------------
+     5) GSAP MOTION — gated behind matchMedia + reduced-motion
+  --------------------------------------------------------------------------- */
+  function initMotion() {
+    if (!window.gsap) return;
+    // Static build (index.static.html) drops the data-animate flag on the
+    // nav element so content is never hidden by JS — it renders fully with
+    // or without a live browser. (Checked on [data-nav], not <html>, so this
+    // still works when this markup is pasted as a body-only fragment with
+    // no <html> tag of its own, e.g. a GHL Custom Code embed.)
+    var navEl = document.querySelector("[data-nav]");
+    if (!navEl || !navEl.hasAttribute("data-animate")) return;
+    if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+    var mm = gsap.matchMedia();
+
+    mm.add(
+      { motion: "(prefers-reduced-motion: no-preference)", reduced: "(prefers-reduced-motion: reduce)" },
+      function (ctx) {
+        var reduced = ctx.conditions.reduced;
+        if (reduced) {
+          gsap.set("[data-reveal], [data-reveal-item], .hero__title, [data-hero-title]", { clearProps: "all", opacity: 1, y: 0 });
+          return;
+        }
+
+        gsap.defaults({ ease: "power3.out" });
+
+        // Hero load-in
+        var heroTitle = document.querySelector("[data-hero-title]");
+        var tl = gsap.timeline({ delay: 0.15 });
+        if (heroTitle) {
+          gsap.set(heroTitle, { opacity: 1 });
+          tl.from(heroTitle, { yPercent: 30, autoAlpha: 0, duration: 1.1, ease: "expo.out" });
+        }
+        tl.from(".hero .eyebrow, .hero__sub, .hero__actions", { y: 24, autoAlpha: 0, duration: 0.9, stagger: 0.12 }, "-=0.7");
+        tl.from(".hero__cue", { autoAlpha: 0, duration: 0.8 }, "-=0.4");
+
+        // Hero parallax
+        gsap.to(".hero__bg img", {
+          yPercent: 12, ease: "none",
+          scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
+        });
+
+        // Generic reveals
+        gsap.utils.toArray("[data-reveal]").forEach(function (el) {
+          gsap.from(el, {
+            y: 40, autoAlpha: 0, duration: 1,
+            scrollTrigger: { trigger: el, start: "top 85%" }
+          });
+        });
+
+        // Staggered items (services, projects, quotes)
+        [".services", ".projects", ".quotes"].forEach(function (sel) {
+          var wrap = document.querySelector(sel);
+          if (!wrap) return;
+          var items = wrap.querySelectorAll("[data-reveal-item]");
+          if (!items.length) return;
+          gsap.from(items, {
+            y: 48, autoAlpha: 0, duration: 0.9, stagger: 0.12,
+            scrollTrigger: { trigger: wrap, start: "top 80%" }
+          });
+        });
+
+        // About image parallax
+        var aboutImg = document.querySelector(".about__media img");
+        if (aboutImg) {
+          gsap.fromTo(aboutImg, { yPercent: -6 }, {
+            yPercent: 6, ease: "none",
+            scrollTrigger: { trigger: ".about__media", start: "top bottom", end: "bottom top", scrub: true }
+          });
+        }
+
+        return function () {}; // cleanup handled by matchMedia
+      }
+    );
+  }
+
+  /* ---------------------------------------------------------------------------
+     BOOT
+  --------------------------------------------------------------------------- */
+  // Resolve <img data-img="key"> straight from SITE (avoids the browser
+  // pre-fetching a literal "{{token}}" URL and 404-ing before templating runs).
+  function resolveImages() {
+    document.querySelectorAll("[data-img]").forEach(function (el) {
+      var key = el.getAttribute("data-img");
+      if (SITE[key]) el.src = SITE[key];
+    });
+  }
+
+  function boot() {
+    fillTokens(document.documentElement);
+    resolveImages();
+    renderServices();
+    renderStats();
+    renderProjects();
+    renderQuotes();
+    renderServiceSelect();
+    renderMisc();
+    initNav();
+    initForm();
+
+    // Start entrance/scroll motion. If the tab is hidden (e.g. a background
+    // preview pane), requestAnimationFrame is frozen and from()-based reveals
+    // would leave content stuck invisible — so defer until the tab is shown.
+    if (document.hidden) {
+      document.addEventListener("visibilitychange", function onVis() {
+        if (!document.hidden) {
+          document.removeEventListener("visibilitychange", onVis);
+          requestAnimationFrame(initMotion);
+        }
+      });
+    } else {
+      requestAnimationFrame(initMotion);
+    }
+
+    // Failsafe: never leave content hidden if the animation engine stalls
+    // (throttled rAF, blocked CDN, etc.).
+    setTimeout(function () {
+      var t = document.querySelector(".hero__title");
+      if (window.gsap && t && parseFloat(getComputedStyle(t).opacity) === 0) {
+        gsap.set(
+          [".hero__title", ".hero .eyebrow", ".hero__sub", ".hero__actions", ".hero__cue", "[data-reveal]", "[data-reveal-item]"],
+          { autoAlpha: 1, y: 0, yPercent: 0, clearProps: "transform" }
+        );
+      }
+    }, 3000);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+})();
+
+</script>
+</body>
+</html>
